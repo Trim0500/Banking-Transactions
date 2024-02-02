@@ -43,6 +43,7 @@ public class Server extends Thread {
         transaction = new Transactions();
         account = new Accounts[maxNbAccounts];
         objNetwork = new Network("server");
+        System.out.println(objNetwork.getServerIP());
         System.out.println("\n Inializing the Accounts database ...");
         initializeAccounts( );
         System.out.println("\n Connecting server to network ...");
@@ -132,7 +133,7 @@ public class Server extends Thread {
 
         try
         {
-            inputStream = new Scanner(new FileInputStream("../Resources/account.txt"));
+            inputStream = new Scanner(new FileInputStream("account.txt"));
         }
         catch(FileNotFoundException e)
         {
