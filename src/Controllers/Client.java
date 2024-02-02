@@ -31,7 +31,7 @@ public class Client extends Thread {
      * @return
      * @param
      */
-    Client(String operation)
+    public Client(String operation)
     {
         if (operation.equals("sending"))
         {
@@ -161,15 +161,19 @@ public class Client extends Thread {
         while (i < getNumberOfTransactions())
         {
             // while( objNetwork.getInBufferStatus().equals("full") );     /* Alternatively, busy-wait until the network input buffer is available */
+            if (objNetwork.getInBufferStatus().equals("full")) {
+                Thread.yield();
+            }
+            else {
+                transaction[i].setTransactionStatus("sent");   /* Set current transaction status */
 
-            transaction[i].setTransactionStatus("sent");   /* Set current transaction status */
+                System.out.println("\n DEBUG : Client.sendTransactions() - sending transaction on account " + transaction[i].getAccountNumber());
 
-            System.out.println("\n DEBUG : Client.sendTransactions() - sending transaction on account " + transaction[i].getAccountNumber());
+                objNetwork.send(transaction[i]);                            /* Transmit current transaction */
 
-            objNetwork.send(transaction[i]);                            /* Transmit current transaction */
-            i++;
+                i++;
+            }
         }
-
     }
 
     /**
@@ -185,13 +189,18 @@ public class Client extends Thread {
         while (i < getNumberOfTransactions())
         {
             // while( objNetwork.getOutBufferStatus().equals("empty"));  	/* Alternatively, busy-wait until the network output buffer is available */
+            if (objNetwork.getOutBufferStatus().equals("empty")) {
+                Thread.yield();
+            }
+            else {
+                objNetwork.receive(transact);                               	/* Receive updated transaction from the network buffer */
 
-            objNetwork.receive(transact);                               	/* Receive updated transaction from the network buffer */
+                System.out.println("\n DEBUG : Client.receiveTransactions() - receiving updated transaction on account " + transact.getAccountNumber());
 
-            System.out.println("\n DEBUG : Client.receiveTransactions() - receiving updated transaction on account " + transact.getAccountNumber());
+                System.out.println(transact);                               	/* Display updated transaction */
 
-            System.out.println(transact);                               	/* Display updated transaction */
-            i++;
+                i++;
+            }
         }
     }
 
@@ -217,6 +226,31 @@ public class Client extends Thread {
         Transactions transact = new Transactions();
         long sendClientStartTime, sendClientEndTime, receiveClientStartTime, receiveClientEndTime;
 
-        /* Implement here the code for the run method ... */
+        if (clientOperation.equals("sending")) {
+            sendClientStartTime = System.currentTimeMillis();
+
+            System.out.println("\n DEBUG : Client.run() - starting client thread " +
+                                objNetwork.getServerConnectionStatus());
+
+            sendTransactions();
+
+            sendClientEndTime = System.currentTimeMillis();
+
+            System.out.println("\n Terminating client thread - Running time " +
+                                (sendClientStartTime - sendClientEndTime) + " milliseconds");
+        }
+        else if (clientOperation.equals("receiving")) {
+            receiveClientStartTime = System.currentTimeMillis();
+
+            System.out.println("\n DEBUG : Client.run() - starting client thread " +
+                    objNetwork.getServerConnectionStatus());
+
+            receiveTransactions(transact);
+
+            receiveClientEndTime = System.currentTimeMillis();
+
+            System.out.println("\n Terminating client thread - Running time " +
+                    (receiveClientStartTime - receiveClientEndTime) + " milliseconds");
+        }
     }
 }
