@@ -559,7 +559,13 @@ public class Network extends Thread {
 
         while (true)
         {
-            /* Implement here the code for the run method ... */
+            if (getClientConnectionStatus().equals("connected") || getServerConnectionStatus().equals("connected")) {
+                Thread.yield();
+            }
+            else if (getClientConnectionStatus().equals("disconnected") &&
+                        getServerConnectionStatus().equals("disconnected")) {
+                break;
+            }
         }
     }
 }

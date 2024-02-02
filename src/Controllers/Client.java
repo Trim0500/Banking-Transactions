@@ -236,8 +236,8 @@ public class Client extends Thread {
 
             sendClientEndTime = System.currentTimeMillis();
 
-            System.out.println("\n Terminating client thread - Running time " +
-                                (sendClientStartTime - sendClientEndTime) + " milliseconds");
+            System.out.println("\n Terminating sending client thread - Running time " +
+                                (sendClientEndTime - sendClientStartTime) + " milliseconds");
         }
         else if (clientOperation.equals("receiving")) {
             receiveClientStartTime = System.currentTimeMillis();
@@ -249,8 +249,10 @@ public class Client extends Thread {
 
             receiveClientEndTime = System.currentTimeMillis();
 
-            System.out.println("\n Terminating client thread - Running time " +
-                    (receiveClientStartTime - receiveClientEndTime) + " milliseconds");
+            System.out.println("\n Terminating receiving client thread - Running time " +
+                    (receiveClientEndTime - receiveClientStartTime) + " milliseconds");
+
+            objNetwork.disconnect(objNetwork.getClientIP());
         }
     }
 }
