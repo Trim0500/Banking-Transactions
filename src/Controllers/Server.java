@@ -236,12 +236,17 @@ public class Server extends Thread {
                             System.out.println("\n DEBUG : Server.processTransactions() - Obtaining balance from account" + trans.getAccountNumber());
                         }
 
-                // while( (objNetwork.getOutBufferStatus().equals("full"))); /* Alternatively,  busy-wait until the network output buffer is available */
+                //while( (objNetwork.getOutBufferStatus().equals("full"))); /* Alternatively,  busy-wait until the network output buffer is available */
+                if(!objNetwork.getOutBufferStatus().equals("full")) {
+                    System.out.println("\n DEBUG : Server.processTransactions() - transferring out account " + trans.getAccountNumber());
 
-                System.out.println("\n DEBUG : Server.processTransactions() - transferring out account " + trans.getAccountNumber());
-
-                objNetwork.transferOut(trans);                            		/* Transfer a completed transaction from the server to the network output buffer */
-                setNumberOfTransactions( (getNumberOfTransactions() +  1) ); 	/* Count the number of transactions processed */
+                    objNetwork.transferOut(trans);                                    /* Transfer a completed transaction from the server to the network output buffer */
+                    setNumberOfTransactions((getNumberOfTransactions() + 1));    /* Count the number of transactions processed */
+                } else {
+                    Thread.yield();
+                }
+            } else {
+                Thread.yield();
             }
         }
 
@@ -257,7 +262,7 @@ public class Server extends Thread {
      * @param i, amount
      */
     public double deposit(int i, double amount)
-    {  double curBalance;      /* Current account balance */
+    {   double curBalance;      /* Current account balance */
 
         curBalance = account[i].getBalance( );          /* Get current account balance */
         account[i].setBalance(curBalance + amount);     /* Deposit amount in the account */
@@ -312,14 +317,18 @@ public class Server extends Thread {
      * @param
      */
     public void run()
-    {   Transactions trans = new Transactions();
+    {
+        Transactions trans = new Transactions();
         long serverStartTime = 0, serverEndTime = 0;
+
+        serverStartTime = System.currentTimeMillis();
 
         System.out.println("\n DEBUG : Server.run() - starting server thread " + objNetwork.getServerConnectionStatus());
 
-        /* Implement the code for the run method */
+        processTransactions(trans);
+
+        serverEndTime = System.currentTimeMillis();
 
         System.out.println("\n Terminating server thread - " + " Running time " + (serverEndTime - serverStartTime) + " milliseconds");
-
     }
 }
