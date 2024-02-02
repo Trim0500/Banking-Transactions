@@ -189,13 +189,18 @@ public class Client extends Thread {
         while (i < getNumberOfTransactions())
         {
             // while( objNetwork.getOutBufferStatus().equals("empty"));  	/* Alternatively, busy-wait until the network output buffer is available */
+            if (objNetwork.getOutBufferStatus().equals("empty")) {
+                Thread.yield();
+            }
+            else {
+                objNetwork.receive(transact);                               	/* Receive updated transaction from the network buffer */
 
-            objNetwork.receive(transact);                               	/* Receive updated transaction from the network buffer */
+                System.out.println("\n DEBUG : Client.receiveTransactions() - receiving updated transaction on account " + transact.getAccountNumber());
 
-            System.out.println("\n DEBUG : Client.receiveTransactions() - receiving updated transaction on account " + transact.getAccountNumber());
+                System.out.println(transact);                               	/* Display updated transaction */
 
-            System.out.println(transact);                               	/* Display updated transaction */
-            i++;
+                i++;
+            }
         }
     }
 
@@ -225,7 +230,7 @@ public class Client extends Thread {
             sendTransactions();
         }
         else if (clientOperation.equals("receiving")) {
-
+            receiveTransactions(transact);
         }
     }
 }
