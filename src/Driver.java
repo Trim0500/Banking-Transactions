@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 
+import Controllers.Client;
 import Controllers.Network;
 import Controllers.Server;
 
@@ -26,6 +27,7 @@ public class Driver {
         Network objNetwork = new Network("network");            /* Activate the network */
         objNetwork.start();
         Server objServer = new Server();
-        /* Complete here the code for the main method ...*/
+
+        Client objSendingClient = new Client("sending");
     }
 }

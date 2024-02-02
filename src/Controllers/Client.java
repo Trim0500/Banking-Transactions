@@ -31,7 +31,7 @@ public class Client extends Thread {
      * @return
      * @param
      */
-    Client(String operation)
+    public Client(String operation)
     {
         if (operation.equals("sending"))
         {
@@ -161,15 +161,19 @@ public class Client extends Thread {
         while (i < getNumberOfTransactions())
         {
             // while( objNetwork.getInBufferStatus().equals("full") );     /* Alternatively, busy-wait until the network input buffer is available */
+            if (objNetwork.getInBufferStatus().equals("full")) {
+                Thread.yield();
+            }
+            else {
+                transaction[i].setTransactionStatus("sent");   /* Set current transaction status */
 
-            transaction[i].setTransactionStatus("sent");   /* Set current transaction status */
+                System.out.println("\n DEBUG : Client.sendTransactions() - sending transaction on account " + transaction[i].getAccountNumber());
 
-            System.out.println("\n DEBUG : Client.sendTransactions() - sending transaction on account " + transaction[i].getAccountNumber());
+                objNetwork.send(transaction[i]);                            /* Transmit current transaction */
 
-            objNetwork.send(transaction[i]);                            /* Transmit current transaction */
-            i++;
+                i++;
+            }
         }
-
     }
 
     /**
@@ -217,6 +221,13 @@ public class Client extends Thread {
         Transactions transact = new Transactions();
         long sendClientStartTime, sendClientEndTime, receiveClientStartTime, receiveClientEndTime;
 
-        /* Implement here the code for the run method ... */
+        while (true) {
+            if (clientOperation.equals("sending")) {
+                sendTransactions();
+            }
+            else if (clientOperation.equals("receiving")) {
+
+            }
+        }
     }
 }
