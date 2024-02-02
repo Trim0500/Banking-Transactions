@@ -44,7 +44,7 @@ public class Server extends Thread {
         account = new Accounts[maxNbAccounts];
         objNetwork = new Network("server");
         System.out.println(objNetwork.getServerIP());
-        System.out.println("\n Inializing the Accounts database ...");
+        System.out.println("\n Initializing the Accounts database ...");
         initializeAccounts( );
         System.out.println("\n Connecting server to network ...");
         if (!(objNetwork.connect(objNetwork.getServerIP())))
@@ -104,7 +104,7 @@ public class Server extends Thread {
      * @return maxNbAccounts
      * @param
      */
-    public int getmMxNbAccounts()
+    public int getMaxNbAccounts()
     {
         return maxNbAccounts;
     }
