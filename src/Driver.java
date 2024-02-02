@@ -29,5 +29,9 @@ public class Driver {
         Server objServer = new Server();
 
         Client objSendingClient = new Client("sending");
+        objSendingClient.start();
+
+        Client objReceivingClient = new Client("receiving");
+        objReceivingClient.start();
     }
 }
