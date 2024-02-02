@@ -221,13 +221,11 @@ public class Client extends Thread {
         Transactions transact = new Transactions();
         long sendClientStartTime, sendClientEndTime, receiveClientStartTime, receiveClientEndTime;
 
-        while (true) {
-            if (clientOperation.equals("sending")) {
-                sendTransactions();
-            }
-            else if (clientOperation.equals("receiving")) {
+        if (clientOperation.equals("sending")) {
+            sendTransactions();
+        }
+        else if (clientOperation.equals("receiving")) {
 
-            }
         }
     }
 }
