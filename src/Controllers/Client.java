@@ -161,18 +161,17 @@ public class Client extends Thread {
         while (i < getNumberOfTransactions())
         {
             // while( objNetwork.getInBufferStatus().equals("full") );     /* Alternatively, busy-wait until the network input buffer is available */
-            if (objNetwork.getInBufferStatus().equals("full")) {
+            while (objNetwork.getInBufferStatus().equals("full")) {
                 Thread.yield();
             }
-            else {
-                transaction[i].setTransactionStatus("sent");   /* Set current transaction status */
 
-                System.out.println("\n DEBUG : Client.sendTransactions() - sending transaction on account " + transaction[i].getAccountNumber());
+            transaction[i].setTransactionStatus("sent");   /* Set current transaction status */
 
-                objNetwork.send(transaction[i]);                            /* Transmit current transaction */
+            System.out.println("\n DEBUG : Client.sendTransactions() - sending transaction on account " + transaction[i].getAccountNumber());
 
-                i++;
-            }
+            objNetwork.send(transaction[i]);                            /* Transmit current transaction */
+
+            ++i;
         }
     }
 
@@ -189,18 +188,17 @@ public class Client extends Thread {
         while (i < getNumberOfTransactions())
         {
             // while( objNetwork.getOutBufferStatus().equals("empty"));  	/* Alternatively, busy-wait until the network output buffer is available */
-            if (objNetwork.getOutBufferStatus().equals("empty")) {
+            while (objNetwork.getOutBufferStatus().equals("empty")) {
                 Thread.yield();
             }
-            else {
-                objNetwork.receive(transact);                               	/* Receive updated transaction from the network buffer */
 
-                System.out.println("\n DEBUG : Client.receiveTransactions() - receiving updated transaction on account " + transact.getAccountNumber());
+            objNetwork.receive(transact);                               	/* Receive updated transaction from the network buffer */
 
-                System.out.println(transact);                               	/* Display updated transaction */
+            System.out.println("\n DEBUG : Client.receiveTransactions() - receiving updated transaction on account " + transact.getAccountNumber());
 
-                i++;
-            }
+            System.out.println(transact);                               	/* Display updated transaction */
+
+            ++i;
         }
     }
 

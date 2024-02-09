@@ -520,6 +520,7 @@ public class Network extends Thread {
         {
             if (getClientIP().equals(IP))
             {
+                System.out.println("Disconnecting the client applications");
                 setClientConnectionStatus("disconnected");
             }
             else
@@ -559,12 +560,14 @@ public class Network extends Thread {
 
         while (true)
         {
-            if (getClientConnectionStatus().equals("connected") || getServerConnectionStatus().equals("connected")) {
-                Thread.yield();
-            }
-            else if (getClientConnectionStatus().equals("disconnected") &&
+            if (getClientConnectionStatus().equals("disconnected") &&
                         getServerConnectionStatus().equals("disconnected")) {
-                break;
+                System.out.println("Terminating network thread - Client disconnected Server disconnected");
+
+                return;
+            }
+            else {
+                Thread.yield();
             }
         }
     }
